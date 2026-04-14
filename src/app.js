@@ -1,4 +1,3 @@
-import authRoutes from './routes/auth.routes.js';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -15,6 +14,8 @@ import { notFound } from './middleware/not-found.js';
 import { analyzeRateLimiter } from './middleware/rate-limit.js';
 import analyzeRoutes from './routes/analyze.routes.js';
 import analysisRoutes from './routes/analysis.routes.js';
+import authRoutes from './routes/auth.routes.js';
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
