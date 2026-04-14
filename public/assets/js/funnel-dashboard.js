@@ -495,7 +495,7 @@ function bindDeleteButtons() {
       }
 
       try {
-        const res = await fetch(`''/analysis/${id}`, {
+        const res = await fetch(`/analysis/${id}`, {
           method: 'DELETE'
         });
         const data = await res.json();
@@ -531,7 +531,7 @@ async function deleteAllHistory() {
   try {
     console.log('🚀 Calling delete all API');
     elements.deleteAll.disabled = true;
-    const res = await fetch('''/analysis/history', {
+    const res = await fetch('/analysis/history', {
       method: 'DELETE'
     });
     const data = await res.json();
