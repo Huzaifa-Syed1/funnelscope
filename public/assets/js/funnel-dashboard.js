@@ -1,4 +1,4 @@
-const API_BASE_URL = '';
+const API_BASE_URL = ";
 const MIN_STEPS = 2;
 const MAX_STEPS = 8;
 const DEFAULT_STEPS = [
@@ -52,7 +52,7 @@ const elements = {
 };
 
 function escapeHtml(value) {
-  return String(value ?? '')
+  return String(value ?? ")
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
@@ -66,7 +66,7 @@ function formatNumber(value) {
 
 function formatPercent(value) {
   const numeric = Number(value ?? 0);
-  return `${numeric.toFixed(2).replace(/\.00$/, '')}%`;
+  return `${numeric.toFixed(2).replace(/\.00$/, ")}%`;
 }
 
 function formatDate(value) {
@@ -77,13 +77,13 @@ function formatDate(value) {
   return new Date(value).toLocaleString();
 }
 
-function formatSigned(value, suffix = '') {
+function formatSigned(value, suffix = ") {
   const numeric = Number(value ?? 0);
-  const sign = numeric > 0 ? '+' : (numeric < 0 ? '-' : '');
+  const sign = numeric > 0 ? '+' : (numeric < 0 ? '-' : ");
   const absolute = Math.abs(numeric);
   const formatted = absolute % 1 === 0
     ? absolute.toLocaleString()
-    : absolute.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+    : absolute.toFixed(2).replace(/0+$/, ").replace(/\.$/, ");
 
   return `${sign}${formatted}${suffix}`;
 }
@@ -115,7 +115,7 @@ function getSeverityClass(severity) {
 function setNotice(type, message) {
   if (!message) {
     elements.formMessage.className = 'notice';
-    elements.formMessage.textContent = '';
+    elements.formMessage.textContent = ";
     return;
   }
 
@@ -134,7 +134,7 @@ async function request(path, { method = 'GET', body } = {}) {
     body: body ? JSON.stringify(body) : undefined
   });
 
-  const contentType = response.headers.get('content-type') ?? '';
+  const contentType = response.headers.get('content-type') ?? ";
   const data = contentType.includes('application/json') ? await response.json() : null;
   console.log('Response:', data);
 
@@ -148,47 +148,47 @@ async function request(path, { method = 'GET', body } = {}) {
 function syncDraftStepsFromDom() {
   const rows = [...elements.funnelInputs.querySelectorAll('[data-step-index]')];
   state.draftSteps = rows.map((row, index) => ({
-    label: row.querySelector('[data-role=''step-label'']')?.value?.trim() || `Step ${index + 1}`,
-    value: row.querySelector('[data-role=''step-value'']')?.value?.trim() || ''
+    label: row.querySelector("[data-role='step-label']")?.value?.trim() || `Step ${index + 1}`,
+    value: row.querySelector("[data-role='step-value']")?.value?.trim() || "
   }));
 }
 
 function renderInputRows() {
   elements.funnelInputs.innerHTML = state.draftSteps.map((step, index) => `
-    <article class=''step-row'' data-step-index=''${index}''>
-      <div class=''field''>
-        <label for=''step-label-${index}''>Step Name</label>
+    <article class="step-row" data-step-index="${index}">
+      <div class="field">
+        <label for="step-label-${index}">Step Name</label>
         <input
-          id=''step-label-${index}''
-          data-role=''step-label''
-          type=''text''
-          value=''${escapeHtml(step.label)}''
-          placeholder=''Visitors''
+          id="step-label-${index}"
+          data-role="step-label"
+          type="text"
+          value="${escapeHtml(step.label)}"
+          placeholder="Visitors"
         >
       </div>
-      <div class=''field''>
-        <label for=''step-value-${index}''>Step Value</label>
+      <div class="field">
+        <label for="step-value-${index}">Step Value</label>
         <input
-          id=''step-value-${index}''
-          data-role=''step-value''
-          type=''number''
-          min=''0''
-          step=''1''
-          value=''${escapeHtml(step.value)}''
-          placeholder=''0''
+          id="step-value-${index}"
+          data-role="step-value"
+          type="number"
+          min="0"
+          step="1"
+          value="${escapeHtml(step.value)}"
+          placeholder="0"
         >
       </div>
       <button
-        class=''remove-step-button''
-        type=''button''
-        data-remove-step=''${index}''
-        aria-label=''Remove step ${index + 1}''
-        ${state.draftSteps.length <= MIN_STEPS ? 'disabled' : ''}
+        class="remove-step-button"
+        type="button"
+        data-remove-step="${index}"
+        aria-label="Remove step ${index + 1}"
+        ${state.draftSteps.length <= MIN_STEPS ? 'disabled' : "}
       >
         Remove
       </button>
     </article>
-  `).join('');
+  `).join(");
 
   elements.addStep.disabled = state.draftSteps.length >= MAX_STEPS;
 }
@@ -245,37 +245,37 @@ function renderMetricCards(analysis) {
     { label: 'Biggest Drop', value: formatPercent(metrics.biggestDrop) },
     { label: 'Worst Step', value: metrics.worstStep ?? 'N/A' }
   ].map((item) => `
-    <article class=''metric-card''>
-      <p class=''metric-label''>${escapeHtml(item.label)}</p>
+    <article class="metric-card">
+      <p class="metric-label">${escapeHtml(item.label)}</p>
       <strong>${escapeHtml(item.value)}</strong>
     </article>
-  `).join('');
+  `).join(");
 }
 
 function renderFunnelBars(analysis) {
   const stepMetrics = analysis?.stepMetrics ?? [];
 
   if (stepMetrics.length === 0) {
-    elements.funnelChart.innerHTML = '<article class=''funnel-row''><div class=''step-note''>No funnel data available yet.</div></article>';
+    elements.funnelChart.innerHTML = '<article class="funnel-row"><div class="step-note">No funnel data available yet.</div></article>';
     return;
   }
 
   elements.funnelChart.innerHTML = stepMetrics.map((step) => `
-    <article class=''funnel-row''>
-      <div class=''funnel-row-head''>
+    <article class="funnel-row">
+      <div class="funnel-row-head">
         <strong>${escapeHtml(step.label)}</strong>
-        <span class=''delta-pill ${step.isBiggestDrop ? 'is-critical' : 'is-flat'}''>
+        <span class="delta-pill ${step.isBiggestDrop ? 'is-critical' : 'is-flat'}">
           ${step.previousLabel ? `${escapeHtml(formatPercent(step.dropPercentFromPrevious))} drop` : 'Top step'}
         </span>
       </div>
-      <div class=''funnel-track''>
-        <div class=''funnel-fill ${step.isBiggestDrop ? 'is-critical' : ''}'' style=''width:${Math.max(Number(step.widthPercent ?? 0), 8)}%''>
-          <span class=''bar-value''>${escapeHtml(formatNumber(step.value))}</span>
+      <div class="funnel-track">
+        <div class="funnel-fill ${step.isBiggestDrop ? 'is-critical' : "}" style="width:${Math.max(Number(step.widthPercent ?? 0), 8)}%">
+          <span class="bar-value">${escapeHtml(formatNumber(step.value))}</span>
         </div>
       </div>
-      <div class=''step-note''>${escapeHtml(formatPercent(step.conversionFromTop))} of top funnel remains</div>
+      <div class="step-note">${escapeHtml(formatPercent(step.conversionFromTop))} of top funnel remains</div>
     </article>
-  `).join('');
+  `).join(");
 }
 
 function renderInsights(analysis) {
@@ -288,15 +288,15 @@ function renderInsights(analysis) {
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => `<p>${escapeHtml(line)}</p>`)
-    .join('');
+    .join(");
 
   elements.recommendationList.innerHTML = (recommendations.length > 0 ? recommendations : ['Run an analysis to see recommendations.'])
     .map((item) => `<li>${escapeHtml(item)}</li>`)
-    .join('');
+    .join(");
 
   elements.alertList.innerHTML = (alerts.length > 0 ? alerts : ['No active alerts.'])
     .map((item) => `<li>${escapeHtml(item)}</li>`)
-    .join('');
+    .join(");
 }
 
 function renderPieChart(analysis) {
@@ -362,7 +362,7 @@ function populateInputsFromAnalysis(analysis) {
 
   state.draftSteps = steps.map((step) => ({
     label: step.label ?? 'Step',
-    value: String(step.value ?? '')
+    value: String(step.value ?? ")
   }));
   renderInputRows();
 }
@@ -372,25 +372,25 @@ function renderHistory() {
 
   if (state.history.length === 0) {
     elements.historyMessage.textContent = 'No saved analyses yet. Run an analysis to build history.';
-    elements.historyList.innerHTML = '';
+    elements.historyList.innerHTML = ";
     return;
   }
 
   elements.historyMessage.textContent = 'Saved analyses are ready to load or compare.';
   elements.historyList.innerHTML = state.history.map((item) => `
-    <div class=''history-item'' data-history-id=''${escapeHtml(item.id)}''>
-      <time datetime=''${escapeHtml(item.createdAt)}''>${escapeHtml(formatDate(item.createdAt))}</time>
+    <div class="history-item" data-history-id="${escapeHtml(item.id)}">
+      <time datetime="${escapeHtml(item.createdAt)}">${escapeHtml(formatDate(item.createdAt))}</time>
       <strong>${escapeHtml(formatPercent(item.metrics?.conversionRate))} conversion</strong>
-      <div class=''history-meta''>
-        <span class=''tag''>${escapeHtml(item.metrics?.worstStep ?? 'N/A')}</span>
+      <div class="history-meta">
+        <span class="tag">${escapeHtml(item.metrics?.worstStep ?? 'N/A')}</span>
       </div>
-      <div class=''history-actions''>
-        <button class=''ghost-button'' type=''button'' data-action=''load'' data-id=''${escapeHtml(item.id)}''>Load</button>
-        <button class=''secondary-button'' type=''button'' data-action=''compare'' data-id=''${escapeHtml(item.id)}''>Compare</button>
-        <button class=''delete-one'' type=''button'' data-id=''${escapeHtml(item.id)}''>Delete</button>
+      <div class="history-actions">
+        <button class="ghost-button" type="button" data-action="load" data-id="${escapeHtml(item.id)}">Load</button>
+        <button class="secondary-button" type="button" data-action="compare" data-id="${escapeHtml(item.id)}">Compare</button>
+        <button class="delete-one" type="button" data-id="${escapeHtml(item.id)}">Delete</button>
       </div>
     </div>
-  `).join('');
+  `).join(");
 
   bindDeleteButtons();
 }
@@ -403,11 +403,11 @@ function renderCompareMetrics(target, analysis) {
     { label: 'Biggest Drop', value: formatPercent(metrics.biggestDrop) },
     { label: 'Worst Step', value: metrics.worstStep ?? 'N/A' }
   ].map((item) => `
-    <article class=''compare-metric''>
+    <article class="compare-metric">
       <span>${escapeHtml(item.label)}</span>
       <strong>${escapeHtml(item.value)}</strong>
     </article>
-  `).join('');
+  `).join(");
 }
 
 function renderComparison(payload) {
@@ -439,18 +439,18 @@ function renderComparison(payload) {
   const stepChanges = comparison.stepChanges ?? [];
   elements.stepChangeGrid.innerHTML = stepChanges.length > 0
     ? stepChanges.map((step) => `
-      <article class=''step-change-card''>
-        <div class=''step-change-head''>
+      <article class="step-change-card">
+        <div class="step-change-head">
           <strong>${escapeHtml(step.label)}</strong>
-          <span class=''delta-pill ${getDirectionClass(step.direction)}''>${escapeHtml(step.relativeChange === null || step.relativeChange === undefined ? 'New baseline' : formatSigned(step.relativeChange, '%'))}</span>
+          <span class="delta-pill ${getDirectionClass(step.direction)}">${escapeHtml(step.relativeChange === null || step.relativeChange === undefined ? 'New baseline' : formatSigned(step.relativeChange, '%'))}</span>
         </div>
-        <div class=''step-change-foot''>
+        <div class="step-change-foot">
           ${escapeHtml(formatNumber(step.previousValue))} -> ${escapeHtml(formatNumber(step.currentValue))} |
           ${escapeHtml(formatSigned(step.absoluteChange))} users
         </div>
       </article>
-    `).join('')
-    : '<article class=''step-change-card''><div class=''step-change-foot''>No step comparison data available.</div></article>';
+    `).join(")
+    : '<article class="step-change-card"><div class="step-change-foot">No step comparison data available.</div></article>';
 }
 
 async function loadHistory() {
@@ -559,7 +559,7 @@ async function runCompare(previousId, currentSteps) {
 
 async function analyzeCurrentFunnel({ compareWithPast = false } = {}) {
   try {
-    setNotice('', '');
+    setNotice(", ");
     setAnalyzeLoading(true);
 
     const steps = collectSteps();
@@ -596,7 +596,7 @@ async function analyzeCurrentFunnel({ compareWithPast = false } = {}) {
 
 async function compareWithHistory(previousId) {
   try {
-    setNotice('', '');
+    setNotice(", ");
     const currentSteps = collectSteps();
     await runCompare(previousId, currentSteps);
     setNotice('success', 'Comparison generated successfully.');
@@ -656,7 +656,7 @@ function handleAddStep() {
 
   state.draftSteps.push({
     label: `Step ${state.draftSteps.length + 1}`,
-    value: ''
+    value: "
   });
   renderInputRows();
 }
