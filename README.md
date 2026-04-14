@@ -91,7 +91,7 @@ JWT_SECRET=random_secret
 node src/server.js
 ```
 
-5. Open [http://localhost:3000](http://localhost:3000)
+5. Open [https://funnelscope.onrender.com/](https://funnelscope.onrender.com/)
 
 ## Notes
 
