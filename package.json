@@ -17,6 +17,7 @@
     "helmet": "^8.1.0",
     "mongoose": "^8.9.5",
     "morgan": "^1.10.0",
-    "bcrypt": "^5.1.0"
+    "bcrypt": "^5.1.0",
+    "jsonwebtoken": "^9.0.2"
   }
 }
