@@ -1,4 +1,4 @@
-const BASE_URL = "https://funnelscope.onrender.com";
+const BASE_URL = "";
 async function request(path, { method = 'GET', body, token } = {}) {
   const response = await fetch(BASE_URL + path, {
     method,
