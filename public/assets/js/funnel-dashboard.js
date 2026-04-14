@@ -502,17 +502,9 @@ function bindDeleteButtons() {
         console.log('Delete response:', data);
 
         if (res.ok) {
-          state.history = state.history.filter((item) => item.id !== id);
-          btn.closest('.history-item')?.remove();
-
-          if (state.history.length === 0) {
-            elements.historyContainer.innerHTML = '';
-            elements.historyMessage.textContent = 'No saved analyses yet. Run an analysis to build history.';
-            elements.deleteAll.disabled = true;
-            resetHistoryViewsIfEmpty();
-          }
-
-          setNotice('success', 'Analysis deleted successfully.');
+        await loadHistory();
+        setNotice('success', 'Analysis deleted successfully.');
+         }
         } else {
           alert('Delete failed');
         }
@@ -538,12 +530,10 @@ async function deleteAllHistory() {
     console.log('📦 Response:', data);
 
     if (res.ok && data.success) {
-      state.history = [];
-      elements.historyContainer.innerHTML = '';
-      elements.historyMessage.textContent = 'No saved analyses yet. Run an analysis to build history.';
-      resetHistoryViewsIfEmpty();
-      alert('All history deleted successfully');
-      setNotice('success', 'All history deleted successfully.');
+  await loadHistory();
+  alert('All history deleted successfully');
+  setNotice('success', 'All history deleted successfully.');
+}
     } else {
       alert(`Delete failed: ${data.message || 'Unknown error'}`);
     }
