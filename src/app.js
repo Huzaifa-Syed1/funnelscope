@@ -34,7 +34,7 @@ app.use(helmet({
       scriptSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", 'data:'],
-      connectSrc: ["'self'"],
+      connectSrc: ["'self'", "https://funnelscope.onrender.com"],
       fontSrc: ["'self'", 'data:'],
       objectSrc: ["'none'"],
       baseUri: ["'self'"],
