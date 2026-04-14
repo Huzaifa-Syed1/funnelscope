@@ -11,7 +11,6 @@ import { isMongoConnected } from './config/db.js';
 import { env, isProduction } from './config/env.js';
 import { errorHandler } from './middleware/error-handler.js';
 import { notFound } from './middleware/not-found.js';
-import { analyzeRateLimiter } from './middleware/rate-limit.js';
 import analyzeRoutes from './routes/analyze.routes.js';
 import analysisRoutes from './routes/analysis.routes.js';
 import authRoutes from './routes/auth.routes.js';
@@ -63,7 +62,7 @@ app.get('/vendor/chart.js', (_req, res) => {
   res.sendFile(chartBundlePath);
 });
 
-app.use('/analyze', analyzeRateLimiter, analyzeRoutes);
+app.use('/analyze', analyzeRoutes);
 app.use('/analysis', analysisRoutes);
 app.use('/auth', authRoutes);
 app.use(express.static(publicDirectory));
