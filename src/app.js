@@ -1,3 +1,4 @@
+import authRoutes from './routes/auth.routes.js';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -63,7 +64,7 @@ app.get('/vendor/chart.js', (_req, res) => {
 
 app.use('/analyze', analyzeRateLimiter, analyzeRoutes);
 app.use('/analysis', analysisRoutes);
-
+app.use('/auth', authRoutes);
 app.use(express.static(publicDirectory));
 
 app.get('*', (req, res, next) => {
