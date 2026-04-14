@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FunnelScope | Funnel Analytics Dashboard</title>
+  <meta
+    name="description"
+    content="A local funnel analytics SaaS dashboard built with Node.js, Express, MongoDB, and Vanilla JS."
+  >
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <script src="/vendor/chart.js" defer></script>
+  <script src="/assets/js/funnel-dashboard.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="hero-card">
+      <div class="hero-copy">
+        <h1>See the leak, explain the drop, compare every run.</h1>
+      </div>
+    </header>
+
+    <main class="dashboard-grid">
+      <section class="panel form-panel">
+        <div class="panel-header">
+          <div>
+            <p class="section-kicker">Funnel Input System</p>
+            <h2>Build your funnel</h2>
+          </div>
+          <button id="addStep" class="ghost-button" type="button">Add Step</button>
+        </div>
+
+        <form id="funnelForm" class="funnel-form">
+          <div id="funnelInputs" class="step-rows"></div>
+
+          <div class="action-row">
+            <button id="analyzeBtn" class="primary-button" type="submit">
+              <span class="button-label">Analyze Funnel</span>
+              <span class="button-spinner" aria-hidden="true"></span>
+            </button>
+            <button id="analyzeWithPastBtn" class="secondary-button" type="button">Analyze with Past</button>
+          </div>
+
+          <p class="helper-copy">
+            Use 2-8 steps. Each analysis is saved automatically so you can compare the latest funnel against history.
+          </p>
+          <div id="formMessage" class="notice" role="status" aria-live="polite"></div>
+        </form>
+      </section>
+
+      <aside class="panel history-panel">
+        <div class="panel-header">
+          <div>
+            <p class="section-kicker">Saved History</p>
+            <h2>Last 20 analyses</h2>
+          </div>
+          <div class="history-toolbar">
+            <button id="refreshHistoryBtn" class="ghost-button" type="button">Refresh</button>
+            <button id="deleteAll" class="danger-button" type="button">Delete All</button>
+          </div>
+        </div>
+
+        <p id="historyMessage" class="helper-copy">Loading saved analyses...</p>
+        <div id="historyList" class="history-list history-container" aria-live="polite"></div>
+      </aside>
+    </main>
+
+    <section id="resultsSection" class="results-section" hidden>
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">Visual Dashboard</p>
+          <h2>Current funnel health</h2>
+        </div>
+        <div id="analysisMeta" class="status-pill">Awaiting analysis</div>
+      </div>
+
+      <div id="metricCards" class="metric-grid"></div>
+
+      <div class="results-grid">
+        <article class="panel chart-panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">Funnel Visual</p>
+              <h3>Step-by-step conversion</h3>
+            </div>
+          </div>
+          <div id="funnelChart" class="funnel-chart"></div>
+        </article>
+
+        <article class="panel pie-panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">Pie Chart</p>
+              <h3>Conversion vs drop-off</h3>
+            </div>
+          </div>
+          <div class="pie-wrap">
+            <canvas id="conversionChart" aria-label="Conversion versus drop-off pie chart"></canvas>
+          </div>
+        </article>
+      </div>
+
+      <div class="insights-grid">
+        <article class="panel insight-panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">Smart Analysis</p>
+              <h3>Rule-engine summary</h3>
+            </div>
+          </div>
+          <div id="insightSummary" class="stacked-copy"></div>
+        </article>
+
+        <article class="panel insight-panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">Focus Areas</p>
+              <h3>Recommended actions</h3>
+            </div>
+          </div>
+          <ul id="recommendationList" class="signal-list"></ul>
+        </article>
+
+        <article class="panel insight-panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">Watchouts</p>
+              <h3>Alerts and risks</h3>
+            </div>
+          </div>
+          <ul id="alertList" class="signal-list"></ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="compareSection" class="compare-section" hidden>
+      <div class="section-heading">
+        <div>
+          <p class="section-kicker">Compare View</p>
+          <h2>Past vs current</h2>
+        </div>
+        <div id="compareStatus" class="status-pill">Waiting for comparison</div>
+      </div>
+
+      <article class="panel compare-summary-panel">
+        <p id="compareSummary" class="compare-summary"></p>
+      </article>
+
+      <div class="compare-card-grid">
+        <article class="panel compare-card">
+          <p class="metric-label">Previous Conversion</p>
+          <p id="previousConversion" class="metric-value">0%</p>
+          <p id="previousDate" class="subtle-copy"></p>
+        </article>
+        <article class="panel compare-card">
+          <p class="metric-label">Current Conversion</p>
+          <p id="currentConversion" class="metric-value">0%</p>
+          <p id="currentDate" class="subtle-copy"></p>
+        </article>
+        <article class="panel compare-card">
+          <p class="metric-label">Conversion Delta</p>
+          <p id="conversionDelta" class="metric-value">0%</p>
+          <p id="deltaFootnote" class="subtle-copy"></p>
+        </article>
+      </div>
+
+      <div class="compare-grid">
+        <article class="panel compare-panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">Previous Analysis</p>
+              <h3>Historical baseline</h3>
+            </div>
+          </div>
+          <div id="previousMetrics" class="compare-metric-stack"></div>
+        </article>
+
+        <article class="panel compare-panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">Current Analysis</p>
+              <h3>Latest run</h3>
+            </div>
+          </div>
+          <div id="currentMetrics" class="compare-metric-stack"></div>
+        </article>
+      </div>
+
+      <article class="panel step-change-panel">
+        <div class="panel-header compact">
+          <div>
+            <p class="section-kicker">Step Changes</p>
+            <h3>Per-step movement</h3>
+          </div>
+        </div>
+        <div id="stepChangeGrid" class="step-change-grid"></div>
+      </article>
+    </section>
+  </div>
+</body>
+</html>
