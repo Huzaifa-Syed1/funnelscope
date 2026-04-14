@@ -1,4 +1,4 @@
-const API_BASE_URL = ";
+const API_BASE_URL = '';
 const MIN_STEPS = 2;
 const MAX_STEPS = 8;
 const DEFAULT_STEPS = [
@@ -52,7 +52,7 @@ const elements = {
 };
 
 function escapeHtml(value) {
-  return String(value ?? ")
+  return String(value ?? '')
     .replaceAll('&', '&amp;')
     .replaceAll('<', '&lt;')
     .replaceAll('>', '&gt;')
@@ -66,7 +66,7 @@ function formatNumber(value) {
 
 function formatPercent(value) {
   const numeric = Number(value ?? 0);
-  return `${numeric.toFixed(2).replace(/\.00$/, ")}%`;
+  return `${numeric.toFixed(2).replace(/\.00$/, '')}%`;
 }
 
 function formatDate(value) {
@@ -77,13 +77,13 @@ function formatDate(value) {
   return new Date(value).toLocaleString();
 }
 
-function formatSigned(value, suffix = ") {
+function formatSigned(value, suffix = '') {
   const numeric = Number(value ?? 0);
-  const sign = numeric > 0 ? '+' : (numeric < 0 ? '-' : ");
+  const sign = numeric > 0 ? '+' : (numeric < 0 ? '-' : '');
   const absolute = Math.abs(numeric);
   const formatted = absolute % 1 === 0
     ? absolute.toLocaleString()
-    : absolute.toFixed(2).replace(/0+$/, ").replace(/\.$/, ");
+    : absolute.toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
 
   return `${sign}${formatted}${suffix}`;
 }
@@ -115,7 +115,7 @@ function getSeverityClass(severity) {
 function setNotice(type, message) {
   if (!message) {
     elements.formMessage.className = 'notice';
-    elements.formMessage.textContent = ";
+    elements.formMessage.textContent = '';
     return;
   }
 
@@ -134,7 +134,7 @@ async function request(path, { method = 'GET', body } = {}) {
     body: body ? JSON.stringify(body) : undefined
   });
 
-  const contentType = response.headers.get('content-type') ?? ";
+  const contentType = response.headers.get('content-type') ?? '';
   const data = contentType.includes('application/json') ? await response.json() : null;
   console.log('Response:', data);
 
@@ -149,7 +149,7 @@ function syncDraftStepsFromDom() {
   const rows = [...elements.funnelInputs.querySelectorAll('[data-step-index]')];
   state.draftSteps = rows.map((row, index) => ({
     label: row.querySelector("[data-role='step-label']")?.value?.trim() || `Step ${index + 1}`,
-    value: row.querySelector("[data-role='step-value']")?.value?.trim() || "
+    value: row.querySelector("[data-role='step-value']")?.value?.trim() || ''
   }));
 }
 
@@ -183,12 +183,12 @@ function renderInputRows() {
         type="button"
         data-remove-step="${index}"
         aria-label="Remove step ${index + 1}"
-        ${state.draftSteps.length <= MIN_STEPS ? 'disabled' : "}
+        ${state.draftSteps.length <= MIN_STEPS ? 'disabled' : ''}
       >
         Remove
       </button>
     </article>
-  `).join(");
+  `).join('');
 
   elements.addStep.disabled = state.draftSteps.length >= MAX_STEPS;
 }
@@ -249,7 +249,7 @@ function renderMetricCards(analysis) {
       <p class="metric-label">${escapeHtml(item.label)}</p>
       <strong>${escapeHtml(item.value)}</strong>
     </article>
-  `).join(");
+  `).join('');
 }
 
 function renderFunnelBars(analysis) {
@@ -269,13 +269,13 @@ function renderFunnelBars(analysis) {
         </span>
       </div>
       <div class="funnel-track">
-        <div class="funnel-fill ${step.isBiggestDrop ? 'is-critical' : "}" style="width:${Math.max(Number(step.widthPercent ?? 0), 8)}%">
+        <div class="funnel-fill ${step.isBiggestDrop ? 'is-critical' : ''}" style="width:${Math.max(Number(step.widthPercent ?? 0), 8)}%">
           <span class="bar-value">${escapeHtml(formatNumber(step.value))}</span>
         </div>
       </div>
       <div class="step-note">${escapeHtml(formatPercent(step.conversionFromTop))} of top funnel remains</div>
     </article>
-  `).join(");
+  `).join('');
 }
 
 function renderInsights(analysis) {
@@ -288,15 +288,15 @@ function renderInsights(analysis) {
     .map((line) => line.trim())
     .filter(Boolean)
     .map((line) => `<p>${escapeHtml(line)}</p>`)
-    .join(");
+    .join('');
 
   elements.recommendationList.innerHTML = (recommendations.length > 0 ? recommendations : ['Run an analysis to see recommendations.'])
     .map((item) => `<li>${escapeHtml(item)}</li>`)
-    .join(");
+    .join('');
 
   elements.alertList.innerHTML = (alerts.length > 0 ? alerts : ['No active alerts.'])
     .map((item) => `<li>${escapeHtml(item)}</li>`)
-    .join(");
+    .join('');
 }
 
 function renderPieChart(analysis) {
@@ -362,7 +362,7 @@ function populateInputsFromAnalysis(analysis) {
 
   state.draftSteps = steps.map((step) => ({
     label: step.label ?? 'Step',
-    value: String(step.value ?? ")
+    value: String(step.value ?? '')
   }));
   renderInputRows();
 }
@@ -372,7 +372,7 @@ function renderHistory() {
 
   if (state.history.length === 0) {
     elements.historyMessage.textContent = 'No saved analyses yet. Run an analysis to build history.';
-    elements.historyList.innerHTML = ";
+    elements.historyList.innerHTML = '';
     return;
   }
 
@@ -390,7 +390,7 @@ function renderHistory() {
         <button class="delete-one" type="button" data-id="${escapeHtml(item.id)}">Delete</button>
       </div>
     </div>
-  `).join(");
+  `).join('');
 
   bindDeleteButtons();
 }
@@ -407,7 +407,7 @@ function renderCompareMetrics(target, analysis) {
       <span>${escapeHtml(item.label)}</span>
       <strong>${escapeHtml(item.value)}</strong>
     </article>
-  `).join(");
+  `).join('');
 }
 
 function renderComparison(payload) {
@@ -449,7 +449,7 @@ function renderComparison(payload) {
           ${escapeHtml(formatSigned(step.absoluteChange))} users
         </div>
       </article>
-    `).join(")
+    `).join('')
     : '<article class="step-change-card"><div class="step-change-foot">No step comparison data available.</div></article>';
 }
 
@@ -502,9 +502,8 @@ function bindDeleteButtons() {
         console.log('Delete response:', data);
 
         if (res.ok) {
-        await loadHistory();
-        setNotice('success', 'Analysis deleted successfully.');
-         }
+          await loadHistory();
+          setNotice('success', 'Analysis deleted successfully.');
         } else {
           alert('Delete failed');
         }
@@ -521,19 +520,18 @@ async function deleteAllHistory() {
   }
 
   try {
-    console.log('🚀 Calling delete all API');
+    console.log('Calling delete all API');
     elements.deleteAll.disabled = true;
     const res = await fetch('/analysis/history', {
       method: 'DELETE'
     });
     const data = await res.json();
-    console.log('📦 Response:', data);
+    console.log('Response:', data);
 
     if (res.ok && data.success) {
-  await loadHistory();
-  alert('All history deleted successfully');
-  setNotice('success', 'All history deleted successfully.');
-}
+      await loadHistory();
+      alert('All history deleted successfully');
+      setNotice('success', 'All history deleted successfully.');
     } else {
       alert(`Delete failed: ${data.message || 'Unknown error'}`);
     }
@@ -559,7 +557,7 @@ async function runCompare(previousId, currentSteps) {
 
 async function analyzeCurrentFunnel({ compareWithPast = false } = {}) {
   try {
-    setNotice(", ");
+    setNotice('', '');
     setAnalyzeLoading(true);
 
     const steps = collectSteps();
@@ -596,7 +594,7 @@ async function analyzeCurrentFunnel({ compareWithPast = false } = {}) {
 
 async function compareWithHistory(previousId) {
   try {
-    setNotice(", ");
+    setNotice('', '');
     const currentSteps = collectSteps();
     await runCompare(previousId, currentSteps);
     setNotice('success', 'Comparison generated successfully.');
@@ -656,7 +654,7 @@ function handleAddStep() {
 
   state.draftSteps.push({
     label: `Step ${state.draftSteps.length + 1}`,
-    value: "
+    value: ''
   });
   renderInputRows();
 }
